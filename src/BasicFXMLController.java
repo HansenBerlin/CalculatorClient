@@ -152,8 +152,7 @@ public class BasicFXMLController
     {
         String tempSequence = "";
         int tempFirst = 0;
-        int tempSecond = 0;
-        
+        int tempSecond = 0;        
 
         for (int i = 0; i < input.length(); i++) 
         {
