@@ -1,5 +1,4 @@
 import java.rmi.Naming;
-import Interfaces.IServerImplementation;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,7 +7,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application 
 {
-	static String url = "//localhost/Calculator";
+	static String url = "//localhost/Server";
 
     @Override
     public void start(Stage stage) throws Exception 

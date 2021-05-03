@@ -2,7 +2,7 @@
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import javax.script.ScriptException;
-import Interfaces.IServerImplementation;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

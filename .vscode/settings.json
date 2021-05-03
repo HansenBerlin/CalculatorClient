@@ -4,14 +4,14 @@
         ".vscode"
     ],
     "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "c:\\Users\\Hannes\\Documents\\_HWR\\SoSe2021\\OOP\\javafx-sdk-11.0.2\\lib\\javafx.base.jar",
-        "c:\\Users\\Hannes\\Documents\\_HWR\\SoSe2021\\OOP\\javafx-sdk-11.0.2\\lib\\javafx.controls.jar",
-        "c:\\Users\\Hannes\\Documents\\_HWR\\SoSe2021\\OOP\\javafx-sdk-11.0.2\\lib\\javafx.fxml.jar",
-        "c:\\Users\\Hannes\\Documents\\_HWR\\SoSe2021\\OOP\\javafx-sdk-11.0.2\\lib\\javafx.graphics.jar",
-        "c:\\Users\\Hannes\\Documents\\_HWR\\SoSe2021\\OOP\\javafx-sdk-11.0.2\\lib\\javafx.media.jar",
-        "c:\\Users\\Hannes\\Documents\\_HWR\\SoSe2021\\OOP\\javafx-sdk-11.0.2\\lib\\javafx.swing.jar",
-        "c:\\Users\\Hannes\\Documents\\_HWR\\SoSe2021\\OOP\\javafx-sdk-11.0.2\\lib\\javafx.web.jar",
-        "c:\\Users\\Hannes\\Documents\\_HWR\\SoSe2021\\OOP\\javafx-sdk-11.0.2\\lib\\javafx-swt.jar"
+        "lib/**/*.jar",        
+        "javafx-sdk-11.0.2/lib/javafx.base.jar",
+        "javafx-sdk-11.0.2/lib/javafx.controls.jar",
+        "javafx-sdk-11.0.2/lib/javafx.fxml.jar",
+        "javafx-sdk-11.0.2/lib/javafx.graphics.jar",
+        "javafx-sdk-11.0.2/lib/javafx.media.jar",
+        "javafx-sdk-11.0.2/lib/javafx.swing.jar",
+        "javafx-sdk-11.0.2/lib/javafx.web.jar",
+        "javafx-sdk-11.0.2/lib/javafx-swt.jar"
     ]
 }
