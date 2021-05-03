@@ -11,9 +11,8 @@ public class Main extends Application
 
     @Override
     public void start(Stage stage) throws Exception 
-    {
+    {    
 		IServerImplementation serverImplementation = (IServerImplementation) Naming.lookup(url);
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource("testui.fxml"));
         loader.setControllerFactory(c -> 
         {
