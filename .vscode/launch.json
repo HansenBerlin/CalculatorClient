@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "Calculator_d36f5861"
+        },
+        {
+            "type": "java",
+            "name": "Launch CalculatorServer",
+            "request": "launch",
+            "mainClass": "Server.CalculatorServer",
+            "projectName": "Calculator_d36f5861"
+        },
+        {
+            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "vmArgs": "--module-path c:\\Users\\Hannes\\Documents\\_HWR\\SoSe2021\\OOP\\javafx-sdk-11.0.2\\lib --add-modules javafx.controls,javafx.fxml",

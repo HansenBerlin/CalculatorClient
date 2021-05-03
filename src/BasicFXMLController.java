@@ -1,181 +1,111 @@
-﻿import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
+﻿import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import javax.script.ScriptException;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import Interfaces.IServerImplementation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
 public class BasicFXMLController
 {
-    static int recSteps = 0;
+    IServerImplementation serverImplementation;  
+    static String url = "//localhost/Calculator";
+
     
     @FXML
-    private Text textOutputField;  
+    private Text textOutputField; 
+
+
+    public BasicFXMLController(IServerImplementation serverImplementation)
+    {
+        this.serverImplementation = serverImplementation;
+    }
 
     @FXML
-    public void initialize() 
+    public void initialize() throws MalformedURLException, RemoteException, NotBoundException 
     {
+        //serverImplementation = (IServerImplementation)Naming.lookup(url);
         //loggedInAsTextUpperRight.setText("nicht eingeloggt");
         //dropdownCustomerAccounts.setVisible(false);   
         //textAccountBalance.setVisible(false);
-        //textAccountType.setVisible(false);
+        //textAccountType.setVisible(false);           
     }
+
     @FXML
     private void onKeyReleased(ActionEvent e)
     {
     }
 
     @FXML
-    private void numberButtonPressed(ActionEvent e) throws ScriptException
+    private void numberButtonPressed(ActionEvent e) throws ScriptException, RemoteException
     {
         Button btn = (Button) e.getSource();
         String id = btn.getId();
+        String userInput = textOutputField.getText();
+
         switch (id) 
         {
             case "buttonOne":
-                textOutputField.setText(textOutputField.getText() + "1");                
+                textOutputField.setText(userInput + "1");  
                 break;
             case "buttonTwo":
-                textOutputField.setText(textOutputField.getText() + "2");                
+                textOutputField.setText(userInput + "2");                
                 break;
             case "buttonThree":
-                textOutputField.setText(textOutputField.getText() + "3");                
+                textOutputField.setText(userInput + "3");                
                 break;
             case "buttonFour":
-                textOutputField.setText(textOutputField.getText() + "4");                
+                textOutputField.setText(userInput + "4");                
                 break;
             case "buttonFive":
-                textOutputField.setText(textOutputField.getText() + "5");                
+                textOutputField.setText(userInput + "5");                
                 break;
             case "buttonSix":
-                textOutputField.setText(textOutputField.getText() + "6");                
+                textOutputField.setText(userInput + "6");                
                 break;
             case "buttonSeven":
-                textOutputField.setText(textOutputField.getText() + "7");                
+                textOutputField.setText(userInput + "7");                
                 break;
             case "buttonEight":
-                textOutputField.setText(textOutputField.getText() + "8");                
+                textOutputField.setText(userInput + "8");                
                 break;
             case "buttonNine":
-                textOutputField.setText(textOutputField.getText() + "9"); 
+                textOutputField.setText(userInput + "9"); 
                 break;
             case "buttonZero":
-                textOutputField.setText(textOutputField.getText() + "0");                
+                textOutputField.setText(userInput + "0");                
                 break; 
             case "buttonPlus":
-                textOutputField.setText(textOutputField.getText() + "+");                
+                textOutputField.setText(userInput + "+");                
                 break; 
             case "buttonMultiply":
-                textOutputField.setText(textOutputField.getText() + "*");                
+                textOutputField.setText(userInput + "*");                
                 break; 
             case "buttonMinus":
-                textOutputField.setText(textOutputField.getText() + "-");                
+                textOutputField.setText(userInput + "-");                
                 break; 
             case "buttonDivide":
-                textOutputField.setText(textOutputField.getText() + "/");                
+                textOutputField.setText(userInput + "/");                
                 break; 
             case "buttonParaOpen":
-                textOutputField.setText(textOutputField.getText() + "(");                
+                textOutputField.setText(userInput + "(");                
                 break; 
             case "buttonParaClose":
-                textOutputField.setText(textOutputField.getText() + ")");                
+                textOutputField.setText(userInput + ")");                
                 break; 
             case "buttonCE":
                 textOutputField.setText("");                
                 break;                   
             case "buttonEquals":
-                textOutputField.setText(textOutputField.getText() + "=" + createClearString(textOutputField.getText()));   
+                if (!serverImplementation.checkForValidUserInput(userInput))
+                    textOutputField.setText("FEHLER: Klammern falsch gesetzt.");   
+                else
+                    textOutputField.setText(userInput + "=" + serverImplementation.createClearStringWithoutParanthesis(userInput));   
                 break;  
             default:
                 break;
         }
-    }  
-
-    private String createClearString(String input) throws ScriptException
-    {
-        // (77+7*8(6+7))
-
-        while(input.contains("("))
-        {
-            String replace = "(" + replaceParanthesis(input) + ")";
-            String result = calculateTest(replace);
-            input = input.replace(replace, result);
-        }
-        return calculateTest(input);
-    }
-
-    private String replaceParanthesis(String input)
-    { 
-        int paranthesisCount = 0;
-        int tempIteratorVariable = 0;
-        
-        for (int i = 0; i < input.length(); i++) 
-        {
-            if (input.charAt(i) == '(')
-            {
-                paranthesisCount++;
-                tempIteratorVariable = i+1;
-
-                while (paranthesisCount != 0) 
-                {
-                    if (input.charAt(tempIteratorVariable) == '(')                    
-                        paranthesisCount++;
-                    
-                    else if (input.charAt(tempIteratorVariable) == ')')                    
-                        paranthesisCount--;                        
-                                         
-                    tempIteratorVariable++;                                
-                }
-                return replaceParanthesis(input.substring(i+1, tempIteratorVariable-1));                
-            }
-        }
-        return input;
-    }    
-
-    private String calculateTest(String evaluate) throws ScriptException
-    {
-        ScriptEngineManager mgr = new ScriptEngineManager();
-        ScriptEngine engine = mgr.getEngineByName("JavaScript");
-        String testReturn = engine.eval(evaluate).toString();
-        System.out.println(testReturn);
-        return testReturn;
-    }
-
-    private void calculateWithoutParanthesis(String input)
-    {
-        String tempSequence = "";
-        int tempFirst = 0;
-        int tempSecond = 0;        
-
-        for (int i = 0; i < input.length(); i++) 
-        {
-            if (input.charAt(i) == '*' || input.charAt(i) == '/' )
-            {
-                if(tempFirst == 0)
-                    tempFirst = Integer.parseInt(tempSequence);
-                else
-                {
-                    tempSecond = Integer.parseInt(tempSequence);
-
-                }
-                tempSequence = "";
-            }
-            else if ((input.charAt(i) == '-' || input.charAt(i) == '+') && !input.contains("*") && !input.contains("/"))
-            {
-                tempFirst = Integer.parseInt(tempSequence);
-                tempSequence = "";
-            }
-            else
-            {
-                tempSequence += input.charAt(i);
-            }
-        }
-    }    
+    }      
 }
