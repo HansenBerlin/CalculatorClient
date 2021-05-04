@@ -50,10 +50,19 @@ public class BasicFXMLController
     {
         String operators = "+-/*()";
         String input = key.getText();
-        if (input.matches("[0-9]+") || operators.contains(input))
-            textOutputField.setText(textOutputField.getText()+input);  
+        if (key.isShiftDown() && input.equals("7"))
+            textOutputField.setText(textOutputField.getText() + "/");  
+        else if (key.isShiftDown() && input.equals("+"))
+            textOutputField.setText(textOutputField.getText() + "*");            
+        else if (input.matches("[0-9]+") || operators.contains(input))
+            textOutputField.setText(textOutputField.getText() + input);  
         else if (key.getCode() == KeyCode.ENTER)
+        {
+            long start = new Date().getTime();                
             textResult.setText(serverImplementation.calculateUserInput(textOutputField.getText()));      
+            long end = new Date().getTime();  
+            textResponseTime.setText(Long.toString(end-start));
+        }
     }
 
 
