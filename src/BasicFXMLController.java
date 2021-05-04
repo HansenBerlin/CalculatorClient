@@ -1,6 +1,10 @@
 ﻿import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.ServerNotActiveException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.script.ScriptException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,25 +20,28 @@ public class BasicFXMLController
     
     @FXML
     private Text textOutputField; 
-
     @FXML
     private Text textResult;
+    @FXML
+    private Text textServerTime;
+    @FXML
+    private Text textClientTime;
+    @FXML
+    private Text textServerIP;
+    @FXML
+    private Text textClientIP;
+    @FXML
+    private Text textResponseTime;   
 
-
-    public BasicFXMLController(IServerImplementation serverImplementation)
+    public BasicFXMLController(IServerImplementation serverImplementation, String serverUrl)
     {
-        this.serverImplementation = serverImplementation;
-        
+        this.serverImplementation = serverImplementation;        
     }
 
     @FXML
-    public void initialize() throws MalformedURLException, RemoteException, NotBoundException 
+    public void initialize() throws MalformedURLException, RemoteException, NotBoundException, ServerNotActiveException 
     {
-        //serverImplementation = (IServerImplementation)Naming.lookup(url);
-        //loggedInAsTextUpperRight.setText("nicht eingeloggt");
-        //dropdownCustomerAccounts.setVisible(false);   
-        //textAccountBalance.setVisible(false);
-        //textAccountType.setVisible(false);           
+        serverImplementation.printEstablishConnectionMessage();          
     }
    
 
@@ -50,25 +57,43 @@ public class BasicFXMLController
     }
 
 
+    private void compareIP() throws RemoteException, ServerNotActiveException
+    {       
+        String[] ips = serverImplementation.getServerAndClientIP();  
+        textServerIP.setText(ips[0]);
+        textClientIP.setText(ips[1]);    
+    }
+
+
+    private void compareTime() throws RemoteException
+    {        
+        textServerTime.setText(serverImplementation.getServerDateAndTime());
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        textClientTime.setText(formatter.format(new Date()));    
+    }
+
     @FXML
-    private void numberButtonPressed(ActionEvent e) throws ScriptException, RemoteException
+    private void getButtonEvents(ActionEvent e) throws ScriptException, RemoteException, ServerNotActiveException
     {
         Button btn = (Button) e.getSource();
         String id = btn.getId();
-        String userInput = textOutputField.getText();
 
-        switch (id) 
+        if (id.equals("btnCompareIPs"))
+            compareIP();
+        else if (id.equals("btnCompareTime"))
+            compareTime();
+        else
+            updateInputFieldValue(id);
+    }     
+
+
+    private void updateInputFieldValue(String buttonId) throws RemoteException
+    {
+        String userInput = textOutputField.getText();
+        switch (buttonId) 
         {
             case "buttonOne":
-                textOutputField.setText(userInput + "1");  
-
-                long start = System.currentTimeMillis();
-                long serverResponseAt = serverImplementation.measureResponseTime();
-                long now = System.currentTimeMillis();
-
-                System.out.println("Hinweg: " + (serverResponseAt - start));
-                System.out.println("Rückweg: " + (now - serverResponseAt));
-
+                textOutputField.setText(userInput + "1");
                 break;
             case "buttonTwo":
                 textOutputField.setText(userInput + "2");                
@@ -116,13 +141,17 @@ public class BasicFXMLController
                 textOutputField.setText(userInput + ")");                
                 break; 
             case "buttonCE":
-                textOutputField.setText("");                
+                textOutputField.setText("");  
+                textResult.setText("");              
                 break;                   
-            case "buttonEquals":                
+            case "buttonEquals":
+                long start = new Date().getTime();                
                 textResult.setText(serverImplementation.calculateUserInput(userInput));   
+                long end = new Date().getTime();  
+                textResponseTime.setText(Long.toString(end-start));
                 break;  
             default:
                 break;
         }
-    }      
+    }     
 }

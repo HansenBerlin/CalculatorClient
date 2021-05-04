@@ -7,17 +7,17 @@ import javafx.stage.Stage;
 
 public class Main extends Application 
 {
-	//static String url = "//192.168.178.39/Server";
-    static String url = "//localhost/Server";
+	//static String serverUrl = "//192.168.178.39/Server";
+    static String serverUrl = "//localhost/Server";
 
     @Override
     public void start(Stage stage) throws Exception 
     {    
-		IServerImplementation serverImplementation = (IServerImplementation) Naming.lookup(url);
+		IServerImplementation serverImplementation = (IServerImplementation) Naming.lookup(serverUrl);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("testui.fxml"));
         loader.setControllerFactory(c -> 
         {
-            return new BasicFXMLController(serverImplementation);
+            return new BasicFXMLController(serverImplementation, serverUrl);
         });
 
         Parent root = loader.load();
