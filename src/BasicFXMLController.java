@@ -48,20 +48,24 @@ public class BasicFXMLController
     @FXML
     private void getKeyEvents(KeyEvent key) throws RemoteException
     {
-        String operators = "+-/*()";
+        String operators = "+-/*().";
         String input = key.getText();
         if (key.isShiftDown() && input.equals("7"))
             textOutputField.setText(textOutputField.getText() + "/");  
         else if (key.isShiftDown() && input.equals("+"))
-            textOutputField.setText(textOutputField.getText() + "*");            
+            textOutputField.setText(textOutputField.getText() + "*");  
+        else if (key.isShiftDown() && input.equals("8"))
+            textOutputField.setText(textOutputField.getText() + "(");
+        else if (key.isShiftDown() && input.equals("9"))
+            textOutputField.setText(textOutputField.getText() + ")");          
         else if (input.matches("[0-9]+") || operators.contains(input))
             textOutputField.setText(textOutputField.getText() + input);  
-        else if (key.getCode() == KeyCode.ENTER)
+        else if (key.getCode() == KeyCode.ENTER || (key.isShiftDown() && input.equals("0")))
         {
             long start = new Date().getTime();                
             textResult.setText(serverImplementation.calculateUserInput(textOutputField.getText()));      
             long end = new Date().getTime();  
-            textResponseTime.setText(Long.toString(end-start));
+            textResponseTime.setText(Long.toString(end-start) + "ms");
         }
     }
 
@@ -76,10 +80,14 @@ public class BasicFXMLController
 
     private void compareTime() throws RemoteException
     {        
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS");
+        long start = new Date().getTime();                
         textServerTime.setText(serverImplementation.getServerDateAndTime());
-        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        long end = new Date().getTime();  
         textClientTime.setText(formatter.format(new Date()));    
+        textResponseTime.setText(Long.toString(end-start) + "ms");        
     }
+    
 
     @FXML
     private void getButtonEvents(ActionEvent e) throws ScriptException, RemoteException, ServerNotActiveException
@@ -149,6 +157,9 @@ public class BasicFXMLController
             case "buttonParaClose":
                 textOutputField.setText(userInput + ")");                
                 break; 
+            case "buttonDecimalPoint":
+                textOutputField.setText(userInput + ".");                
+                break; 
             case "buttonCE":
                 textOutputField.setText("");  
                 textResult.setText("");              
@@ -157,7 +168,7 @@ public class BasicFXMLController
                 long start = new Date().getTime();                
                 textResult.setText(serverImplementation.calculateUserInput(userInput));   
                 long end = new Date().getTime();  
-                textResponseTime.setText(Long.toString(end-start));
+                textResponseTime.setText(Long.toString(end-start) + "ms");
                 break;  
             default:
                 break;
