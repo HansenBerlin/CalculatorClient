@@ -5,21 +5,26 @@ import javax.script.ScriptException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 
 public class BasicFXMLController
 {
     IServerImplementation serverImplementation;  
     //static String url = "//localhost/Calculator";
-
     
     @FXML
     private Text textOutputField; 
+
+    @FXML
+    private Text textResult;
 
 
     public BasicFXMLController(IServerImplementation serverImplementation)
     {
         this.serverImplementation = serverImplementation;
+        
     }
 
     @FXML
@@ -31,11 +36,19 @@ public class BasicFXMLController
         //textAccountBalance.setVisible(false);
         //textAccountType.setVisible(false);           
     }
+   
 
     @FXML
-    private void onKeyReleased(ActionEvent e)
+    private void getKeyEvents(KeyEvent key) throws RemoteException
     {
+        String operators = "+-/*()";
+        String input = key.getText();
+        if (input.matches("[0-9]+") || operators.contains(input))
+            textOutputField.setText(textOutputField.getText()+input);  
+        else if (key.getCode() == KeyCode.ENTER)
+            textResult.setText(serverImplementation.calculateUserInput(textOutputField.getText()));      
     }
+
 
     @FXML
     private void numberButtonPressed(ActionEvent e) throws ScriptException, RemoteException
@@ -48,6 +61,14 @@ public class BasicFXMLController
         {
             case "buttonOne":
                 textOutputField.setText(userInput + "1");  
+
+                long start = System.currentTimeMillis();
+                long serverResponseAt = serverImplementation.measureResponseTime();
+                long now = System.currentTimeMillis();
+
+                System.out.println("Hinweg: " + (serverResponseAt - start));
+                System.out.println("Rückweg: " + (now - serverResponseAt));
+
                 break;
             case "buttonTwo":
                 textOutputField.setText(userInput + "2");                
@@ -97,11 +118,8 @@ public class BasicFXMLController
             case "buttonCE":
                 textOutputField.setText("");                
                 break;                   
-            case "buttonEquals":
-                if (!serverImplementation.checkForValidUserInput(userInput))
-                    textOutputField.setText("FEHLER: Klammern falsch gesetzt.");   
-                else
-                    textOutputField.setText(userInput + "=" + serverImplementation.createClearStringWithoutParanthesis(userInput));   
+            case "buttonEquals":                
+                textResult.setText(serverImplementation.calculateUserInput(userInput));   
                 break;  
             default:
                 break;

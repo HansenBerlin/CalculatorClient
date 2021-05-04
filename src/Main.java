@@ -7,7 +7,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application 
 {
-	static String url = "//localhost/Server";
+	//static String url = "//192.168.178.39/Server";
+    static String url = "//localhost/Server";
 
     @Override
     public void start(Stage stage) throws Exception 
@@ -21,14 +22,9 @@ public class Main extends Application
 
         Parent root = loader.load();
         Scene scene = new Scene(root);
-        scene.setRoot(root);
+        scene.setRoot(root);        
         stage.setScene(scene);
         stage.show();
-
-        //Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("testui.fxml"));        
-        //Scene scene = new Scene(root);
-        //stage.setScene(scene);
-        //stage.show();
     }
     
     public static void main(String[] args) 
